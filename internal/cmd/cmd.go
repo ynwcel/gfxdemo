@@ -3,7 +3,6 @@ package cmd
 import (
 	"os"
 
-	"github.com/ynwcel/gfxdemo/internal/svcx"
 	"github.com/ynwcel/gox/gflagx"
 )
 
@@ -40,10 +39,6 @@ func (cx *cmdx) Run() error {
 		cx.flag.Usage()
 		return nil
 	}
-	if err = svcx.Bootstrap(cx.debug); err != nil {
-		return err
-	}
-
 	if err = cx.unpack_public(); err != nil {
 		return err
 	}

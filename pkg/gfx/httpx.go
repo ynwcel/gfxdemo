@@ -52,8 +52,8 @@ func (sx *HttpServerx) StaticsFS(prefix string, staticfs fs.FS, logs ...glog.ILo
 			req_file = strings.TrimLeft(req_uri, prefix)
 		)
 		if content, err := fs.ReadFile(staticfs, req_file); err != nil {
-			log.Errorf(r.GetCtx(), "staticfs-error:%s", req_file)
-			r.Response.WriteStatus(http.StatusNotFound, "not-found")
+			log.Errorf(r.GetCtx(), "not-found-file:%s", req_uri)
+			r.Response.WriteStatus(http.StatusNotFound, "Not Found")
 		} else {
 			fstat, _ := fs.Stat(staticfs, req_file)
 			http.ServeContent(r.Response.Writer, r.Request, req_file, fstat.ModTime(), bytes.NewReader(content))

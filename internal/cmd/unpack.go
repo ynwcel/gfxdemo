@@ -16,17 +16,21 @@ func (cx *cmdx) unpack_public() error {
 		return nil
 	}
 	var (
+		base_dir   = "./public"
 		embed_fs   = public.EmbedFS()
 		files, err = public.ListFiles()
 	)
 	if err != nil {
 		return gerror.Wrap(err, "get-embed-files-error")
 	}
+	if err = gfile.Mkdir(base_dir); err != nil {
+		return gerror.Wrap(err, "create-public-folder-error")
+	}
 	for _, file := range files {
 		if strings.EqualFold(filepath.Ext(file), ".go") {
 			continue
 		}
-		public_file := fmt.Sprintf("public/%s", strings.TrimLeft(file, "/"))
+		public_file := fmt.Sprintf("%s/%s", base_dir, strings.TrimLeft(file, "/"))
 		fstat, err := fs.Stat(embed_fs, file)
 		if err != nil {
 			return gerror.Wrap(err, "get-embed-file-stat-error")

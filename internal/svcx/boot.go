@@ -9,7 +9,6 @@ import (
 
 const (
 	svcx_runmode_mapkey = "svcx.run_mode"
-	PUBLIC_PATH         = "./public"
 	RUNTIME_PATH        = "./runtimes"
 	STORAGES_PATH       = "./storages"
 )
@@ -34,7 +33,6 @@ func Bootstrap(run_mode_is_debug bool) error {
 func setup_dirs() error {
 	var (
 		dirs = []string{
-			PUBLIC_PATH,
 			RUNTIME_PATH,
 			STORAGES_PATH,
 		}
