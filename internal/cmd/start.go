@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/ynwcel/gfxdemo/internal/gcronx"
 	"github.com/ynwcel/gfxdemo/internal/ghttpx"
 	"github.com/ynwcel/gfxdemo/internal/grpcx"
@@ -22,7 +23,7 @@ func (cx *cmdx) start_sub_process() error {
 		err      error
 	)
 	if err = svcx.Bootstrap(); err != nil {
-		return err
+		return gerror.Wrap(err, "failed to bootstrap service")
 	}
 	if cx.ghttpx {
 		errgroup.Go(func() error {
@@ -34,7 +35,7 @@ func (cx *cmdx) start_sub_process() error {
 			return util.Try(gcronx.Start)
 		})
 	}
-	if cx.gcronx {
+	if cx.grpcx {
 		errgroup.Go(func() error {
 			return util.Try(grpcx.Start)
 		})
@@ -43,7 +44,7 @@ func (cx *cmdx) start_sub_process() error {
 	signal.Notify(signChan, os.Interrupt)
 	select {
 	case err := <-errgroup.Wait():
-		return err
+		return gerror.Wrap(err, "one or more services failed to start")
 	case <-signChan:
 		return nil
 	}
