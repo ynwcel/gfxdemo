@@ -12,7 +12,7 @@ import (
 	"github.com/ynwcel/gfxdemo/public"
 )
 
-func (cx *cmdx) unpack_public_resouce() error {
+func (cx *cmdx) unpack_resouce() error {
 	if !cx.unpack {
 		return nil
 	}

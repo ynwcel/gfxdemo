@@ -13,7 +13,7 @@ import (
 	"github.com/ynwcel/gox/gerrgroup"
 )
 
-func (cx *cmdx) start_sub_process() error {
+func (cx *cmdx) start_process() error {
 	if !cx.ghttpx && !cx.gcronx && !cx.grpcx {
 		return nil
 	}
