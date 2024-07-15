@@ -51,10 +51,10 @@ func (cx *cmdx) Run() error {
 		cx.flagset.Usage()
 		return nil
 	}
-	if err := cx.unpack_public_resouce(); err != nil {
+	if err := cx.unpack_resouce(); err != nil {
 		return err
 	}
-	if err := cx.start_sub_process(); err != nil {
+	if err := cx.start_process(); err != nil {
 		return err
 	}
 	return nil
