@@ -1,0 +1,17 @@
+
+# CLI tool, only in development environment.
+# https://goframe.org/pages/viewpage.action?pageId=3673173
+gfcli:
+  gen:
+    dao:
+      - type: mysql
+        link: user:pass@tcp(host:port)/dbname
+        jsonCase: normal
+        daoPath: model/dao
+        doPath: model/do
+        entityPath: model/entity
+        tplDaoInternalPath: ./hack/dao_internal.go.tpl
+  docker:
+    build: "-a amd64 -s linux -p temp -ew"
+    tagPrefixes:
+      - my.image.pub/my-app

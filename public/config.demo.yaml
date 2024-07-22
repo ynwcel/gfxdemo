@@ -1,0 +1,30 @@
+app_debug: true
+
+ghttpx:
+  address:     ":8000"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+
+logger:
+  default:
+    path: runtimes
+    level: all
+    stdout: false
+
+database:
+  default:
+    - type: mysql
+      link: user:pass@tcp(host:port)/dbname?charset=utf8mb4&loc=Local&parseTime=true
+      role: master
+
+redis:
+  default:
+    address: host:port
+    pass: 
+    db: 
+
+users:
+
+
+
