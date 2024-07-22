@@ -18,7 +18,7 @@ temp.yaml
 bin
 config.yaml
 **/config.yaml
-rumtimes
+runtimes
 runtimes/*
 storages/
 storages/*
