@@ -16,9 +16,10 @@ import (
 
 func main() {
 	var (
-		setmode = flag.String("setmode", "", "change package module name")
-		build   = flag.String("build", "", "set build version and run go build")
-		err     error
+		setgomode     = flag.String("setgomod", "", "change go mod name")
+		build         = flag.Bool("build", false, "run go build")
+		build_version = flag.String("build.version", "0.0.1", "set build version")
+		err           error
 	)
 	flag.Usage = func() {
 		fmt.Printf("Options:\n")
@@ -26,10 +27,10 @@ func main() {
 	}
 	flag.Parse()
 	switch {
-	case len(*build) > 0:
-		err = hack_build(*build)
-	case len(*setmode) > 0:
-		err = hack_setmode(*setmode)
+	case *build:
+		err = hack_build(*build_version)
+	case len(*setgomode) > 0:
+		err = hack_setgomode(*setgomode)
 	default:
 		flag.Usage()
 		err = fmt.Errorf("no command")
@@ -51,10 +52,10 @@ func hack_build(build_version string) error {
 	return nil
 }
 
-func hack_setmode(new_mode string) error {
+func hack_setgomode(new_mod string) error {
 	var (
 		cur_dir           = filepath.Dir(".")
-		old_mode          string
+		old_mod           string
 		old_gomod_file    = fmt.Sprintf("%s/go.mod", cur_dir)
 		old_gomod_content []byte
 		walk              func(path string) []string
@@ -63,7 +64,7 @@ func hack_setmode(new_mode string) error {
 		gofile_regexp     = regexp.MustCompile(`.*?\.go.*?`)
 		cmd_args          = []string{"mod", "tidy"}
 	)
-	if !mod_regexp.Match([]byte(new_mode)) {
+	if !mod_regexp.Match([]byte(new_mod)) {
 		return errors.New("new-mode-name-error")
 	}
 	if old_gomod_content, err = os.ReadFile(old_gomod_file); err != nil {
@@ -72,11 +73,11 @@ func hack_setmode(new_mode string) error {
 	lines := strings.Split(string(old_gomod_content), "\n")
 	for _, line := range lines {
 		if strings.Index(line, "module ") == 0 {
-			old_mode = strings.Split(line, "module ")[1]
+			old_mod = strings.Split(line, "module ")[1]
 			break
 		}
 	}
-	if len(old_mode) == 0 {
+	if len(old_mod) == 0 {
 		return fmt.Errorf("get-old-mode-name-error")
 	}
 	walk = func(path string) []string {
@@ -105,8 +106,8 @@ func hack_setmode(new_mode string) error {
 			if err != nil {
 				return fmt.Errorf("read-go-file-error:%W", err)
 			}
-			if bytes.Contains(f_content, []byte(old_mode)) {
-				f_content_new := bytes.ReplaceAll(f_content, []byte(old_mode), []byte(new_mode))
+			if bytes.Contains(f_content, []byte(old_mod)) {
+				f_content_new := bytes.ReplaceAll(f_content, []byte(old_mod), []byte(new_mod))
 				if err = os.WriteFile(f, f_content_new, 0666); err != nil {
 					return fmt.Errorf("save-go-file-error:%W", err)
 				}
