@@ -1,6 +1,8 @@
 package svcx
 
 import (
+	"os"
+
 	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gfile"
@@ -8,9 +10,14 @@ import (
 	"github.com/ynwcel/gfxdemo/internal/util"
 )
 
+const (
+	app_version_key = "app_version"
+	app_debug_key   = "app_debug"
+)
+
 var svcxcaches = gmap.NewStrAnyMap(true)
 
-func Bootstrap() error {
+func Bootstrap(appVersion string) error {
 	var (
 		cache_key = "svcx.bootstraped"
 	)
@@ -18,6 +25,9 @@ func Bootstrap() error {
 		return gerror.New("repeat run svcx.bootstrap")
 	}
 	return util.Try(func() error {
+		if err := os.Setenv(app_version_key, appVersion); err != nil {
+			return gerror.Wrap(err, "set-app-version-env-error")
+		}
 		if err := bootstrap_mkdirs(); err != nil {
 			return err
 		}

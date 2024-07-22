@@ -10,6 +10,7 @@ import (
 
 type cmdx struct {
 	flagset *pflag.FlagSet
+	version string
 	unpack  bool
 	ghttpx  bool
 	gcronx  bool
@@ -17,10 +18,10 @@ type cmdx struct {
 	help    bool
 }
 
-func New(appVersion string) *cmdx {
-	app := os.Args[0]
+func NewWithVersion(appVersion string) *cmdx {
 	cx := &cmdx{
-		flagset: pflag.NewFlagSet(filepath.Base(app), pflag.ContinueOnError),
+		version: appVersion,
+		flagset: pflag.NewFlagSet(filepath.Base(os.Args[0]), pflag.ContinueOnError),
 	}
 	cx.flagset.SortFlags = false
 	cx.flagset.BoolVar(&cx.ghttpx, "ghttpx", false, "start ghttpx process")
@@ -28,15 +29,6 @@ func New(appVersion string) *cmdx {
 	cx.flagset.BoolVar(&cx.grpcx, "grpcx", false, "start grpcx process")
 	cx.flagset.BoolVar(&cx.unpack, "unpack", false, "unpack public folder")
 	cx.flagset.BoolVarP(&cx.help, "help", "h", false, "show help message")
-	cx.flagset.Usage = func() {
-		fmt.Println("Usage:")
-		fmt.Printf("  %s [options]\n", filepath.Base(app))
-		fmt.Printf("Options:\n")
-		cx.flagset.PrintDefaults()
-		fmt.Println("Version:")
-		fmt.Printf("  %s", appVersion)
-		fmt.Println()
-	}
 	return cx
 }
 
@@ -48,7 +40,13 @@ func (cx *cmdx) Run() error {
 		return err
 	}
 	if len(args) <= 0 || cx.help {
-		cx.flagset.Usage()
+		fmt.Println("Usage:")
+		fmt.Printf("  %s [options]\n", filepath.Base(os.Args[0]))
+		fmt.Printf("Options:\n")
+		cx.flagset.PrintDefaults()
+		fmt.Println("Version:")
+		fmt.Printf("  %s", cx.version)
+		fmt.Println()
 		return nil
 	}
 	if err := cx.unpack_resouce(); err != nil {

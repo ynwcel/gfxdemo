@@ -22,7 +22,7 @@ func (cx *cmdx) start_process() error {
 		errgroup = gerrgroup.New()
 		err      error
 	)
-	if err = svcx.Bootstrap(); err != nil {
+	if err = svcx.Bootstrap(cx.version); err != nil {
 		return gerror.Wrap(err, "failed to bootstrap service")
 	}
 	if cx.ghttpx {

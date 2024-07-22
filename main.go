@@ -11,7 +11,7 @@ var (
 )
 
 func main() {
-	if err := cmd.New(appVersion).Run(); err != nil {
+	if err := cmd.NewWithVersion(appVersion).Run(); err != nil {
 		panic(err)
 	}
 }
