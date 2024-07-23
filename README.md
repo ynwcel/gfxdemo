@@ -3,7 +3,7 @@
 ```
 git clone https://github.com/ynwcel/gfxdemo
 ```
-#### 1.2 重命名包表（可选）
+#### 1.2 重命名包名（可选）
 ```
 go run hack/hack.go --setgomod=mygoweb
 ```
