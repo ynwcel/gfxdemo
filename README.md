@@ -23,7 +23,7 @@ cp hack/config.demo.yaml hack/config.yaml
 ```
 
 ### 3、编译
-#### 3.1 自动设置版本及日期
+#### 3.1 设置版本（hack.go自动设置编译时间）
 ```
 go run hack/hack.go --build --build.version=0.0.1
 ```
