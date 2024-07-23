@@ -30,7 +30,7 @@ func main() {
 	case *build:
 		err = hack_build(*build_version)
 	case len(*setgomod) > 0:
-		err = hack_setgomod(*setgomod)
+		err = hack_setgomod([]byte(*setgomod))
 	default:
 		flag.Usage()
 		err = fmt.Errorf("no command")
@@ -52,10 +52,10 @@ func hack_build(build_version string) error {
 	return nil
 }
 
-func hack_setgomod(new_mod string) error {
+func hack_setgomod(new_mod []byte) error {
 	var (
 		cur_dir           = filepath.Dir(".")
-		old_mod           string
+		old_mod           []byte
 		old_gomod_file    = fmt.Sprintf("%s/go.mod", cur_dir)
 		old_gomod_content []byte
 		walk              func(path string) []string
@@ -70,10 +70,10 @@ func hack_setgomod(new_mod string) error {
 	if old_gomod_content, err = os.ReadFile(old_gomod_file); err != nil {
 		return fmt.Errorf("read-go.mod-error:%W", err)
 	}
-	lines := strings.Split(string(old_gomod_content), "\n")
+	lines := bytes.Split(old_gomod_content, []byte("\n"))
 	for _, line := range lines {
-		if strings.Index(line, "module ") == 0 {
-			old_mod = strings.Split(line, "module ")[1]
+		if strings.Index(string(line), "module ") == 0 {
+			old_mod = bytes.Split(line, []byte("module "))[1]
 			break
 		}
 	}
@@ -100,14 +100,17 @@ func hack_setgomod(new_mod string) error {
 		}
 		return result
 	}
+
 	for _, f := range walk(cur_dir) {
 		if gofile_regexp.Match([]byte(f)) || filepath.Base(f) == "go.mod" {
-			f_content, err := os.ReadFile(f)
+			var (
+				f_content, err = os.ReadFile(f)
+			)
 			if err != nil {
 				return fmt.Errorf("read-go-file-error:%W", err)
 			}
-			if bytes.Contains(f_content, []byte(old_mod)) {
-				f_content_new := bytes.ReplaceAll(f_content, []byte(old_mod), []byte(new_mod))
+			if bytes.Contains(f_content, old_mod) {
+				f_content_new := bytes.ReplaceAll(f_content, old_mod, new_mod)
 				if err = os.WriteFile(f, f_content_new, 0666); err != nil {
 					return fmt.Errorf("save-go-file-error:%W", err)
 				}
