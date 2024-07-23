@@ -73,7 +73,7 @@ func hack_setgomod(new_mod []byte) error {
 	lines := bytes.Split(old_gomod_content, []byte("\n"))
 	for _, line := range lines {
 		if strings.Index(string(line), "module ") == 0 {
-			old_mod = bytes.Split(line, []byte("module "))[1]
+			old_mod = bytes.TrimSpace(bytes.Split(line, []byte("module "))[1])
 			break
 		}
 	}
