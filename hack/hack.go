@@ -16,7 +16,7 @@ import (
 
 func main() {
 	var (
-		setgomode     = flag.String("setgomod", "", "change go mod name")
+		setgomod      = flag.String("setgomod", "", "change go mod name")
 		build         = flag.Bool("build", false, "run go build")
 		build_version = flag.String("build.version", "0.0.1", "set build version")
 		err           error
@@ -29,8 +29,8 @@ func main() {
 	switch {
 	case *build:
 		err = hack_build(*build_version)
-	case len(*setgomode) > 0:
-		err = hack_setgomode(*setgomode)
+	case len(*setgomod) > 0:
+		err = hack_setgomod(*setgomod)
 	default:
 		flag.Usage()
 		err = fmt.Errorf("no command")
@@ -52,7 +52,7 @@ func hack_build(build_version string) error {
 	return nil
 }
 
-func hack_setgomode(new_mod string) error {
+func hack_setgomod(new_mod string) error {
 	var (
 		cur_dir           = filepath.Dir(".")
 		old_mod           string
@@ -65,10 +65,10 @@ func hack_setgomode(new_mod string) error {
 		cmd_args          = []string{"mod", "tidy"}
 	)
 	if !mod_regexp.Match([]byte(new_mod)) {
-		return errors.New("new-mode-name-error")
+		return errors.New("new-mod-name-error")
 	}
 	if old_gomod_content, err = os.ReadFile(old_gomod_file); err != nil {
-		return fmt.Errorf("read-go.mode-error:%W", err)
+		return fmt.Errorf("read-go.mod-error:%W", err)
 	}
 	lines := strings.Split(string(old_gomod_content), "\n")
 	for _, line := range lines {
@@ -78,7 +78,7 @@ func hack_setgomode(new_mod string) error {
 		}
 	}
 	if len(old_mod) == 0 {
-		return fmt.Errorf("get-old-mode-name-error")
+		return fmt.Errorf("get-old-mod-name-error")
 	}
 	walk = func(path string) []string {
 		var (
