@@ -100,7 +100,7 @@ func hack_setgomod(new_mod_name string) error {
 				result = append(result, fpath)
 				if finfo, err := fs.Stat(dirfs, f); err == nil {
 					if finfo.IsDir() {
-						subfs := walk(filepath.Join(path, f))
+						subfs := walk(fpath)
 						result = append(result, subfs...)
 					}
 				}
