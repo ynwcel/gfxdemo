@@ -65,7 +65,7 @@ func hack_setgomod(new_mod_name string) error {
 		gofile_regexp     = regexp.MustCompile(`.*?\.go.*?`)
 		cmd_args          = []string{"mod", "tidy"}
 	)
-	if !mod_regexp.Match([]byte(new_mod)) {
+	if !mod_regexp.Match(new_mod) {
 		return errors.New("new-mod-name-error")
 	}
 	if old_gomod_content, err = os.ReadFile(old_gomod_file); err != nil {
