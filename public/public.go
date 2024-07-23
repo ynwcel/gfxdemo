@@ -58,6 +58,9 @@ func ReadDir(dirpath string) ([]fs.DirEntry, error) {
 	}
 }
 
+// Stat 函数用于获取给定文件路径的文件信息。
+// 它首先尝试从实际文件系统中获取文件信息。如果失败，则尝试从嵌入的文件系统中获取。
+// 这个函数的存在是为了提供一种统一的方式来访问不同来源的文件信息，而不需要调用者关心具体的文件系统实现。
 func Stat(fpath string) (fs.FileInfo, error) {
 	if info, err := fs.Stat(real_fs, fpath); err == nil {
 		return info, err
