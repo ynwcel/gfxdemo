@@ -60,7 +60,7 @@ func hack_setgomode(new_mod string) error {
 		old_gomod_content []byte
 		walk              func(path string) []string
 		err               error
-		mod_regexp        = regexp.MustCompile(`^[\W\w][\w\W\/\-]+$`)
+		mod_regexp        = regexp.MustCompile(`^[\w][\w\d\/\-]+$`)
 		gofile_regexp     = regexp.MustCompile(`.*?\.go.*?`)
 		cmd_args          = []string{"mod", "tidy"}
 	)
