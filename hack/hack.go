@@ -43,7 +43,11 @@ func main() {
 func hack_build(build_version string) error {
 	var (
 		cur_time = time.Now().Format("060102.1504")
-		cmd_args = []string{"build", "-ldflags", fmt.Sprintf("-X main.appVersion=%s.%s", build_version, cur_time)}
+		cmd_args = []string{
+			"build",
+			"-ldflags",
+			fmt.Sprintf("-X main.appVersion=%s.%s", build_version, cur_time),
+		}
 	)
 	fmt.Printf("> go %s\n", strings.Join(cmd_args, " "))
 	if err := exec.Command("go", cmd_args...).Run(); err != nil {
@@ -63,7 +67,10 @@ func hack_setgomod(new_mod_name string) error {
 		err               error
 		mod_regexp        = regexp.MustCompile(`^[\w][\w\d\/\-]+$`)
 		gofile_regexp     = regexp.MustCompile(`.*?\.go.*?`)
-		cmd_args          = []string{"mod", "tidy"}
+		cmd_args          = []string{
+			"mod",
+			"tidy",
+		}
 	)
 	if !mod_regexp.Match(new_mod) {
 		return errors.New("new-mod-name-error")
