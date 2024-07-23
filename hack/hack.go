@@ -30,7 +30,7 @@ func main() {
 	case *build:
 		err = hack_build(*build_version)
 	case len(*setgomod) > 0:
-		err = hack_setgomod([]byte(*setgomod))
+		err = hack_setgomod(*setgomod)
 	default:
 		flag.Usage()
 		err = fmt.Errorf("no command")
@@ -52,9 +52,10 @@ func hack_build(build_version string) error {
 	return nil
 }
 
-func hack_setgomod(new_mod []byte) error {
+func hack_setgomod(new_mod_name string) error {
 	var (
 		cur_dir           = filepath.Dir(".")
+		new_mod           = bytes.TrimSpace([]byte(new_mod_name))
 		old_mod           []byte
 		old_gomod_file    = fmt.Sprintf("%s/go.mod", cur_dir)
 		old_gomod_content []byte
