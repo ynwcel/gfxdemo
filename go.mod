@@ -9,7 +9,6 @@ require (
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.7.2
 	github.com/gogf/gf/v2 v2.7.2
 	github.com/spf13/pflag v1.0.5
-	github.com/ynwcel/gox/gerrgroup v0.0.0-20240710154501-1b529083d10b
 )
 
 require (
